@@ -1,42 +1,77 @@
 package com.example.customlist;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    private ListView listView;
+
+    private Random random = new Random();
+    private DataAdapter adapter;
+    private List<Drawable> images = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        listView = findViewById(R.id.zone_list);
-        final ArrayList<HashMap<String, String>> arrayList = new ArrayList<>();
-        HashMap<String, String> map;
-        String Name = "Name";
-        String Description = "Description";
-        Data firstObject = new Data("Anton","Funny kid",12);
-        Data secondObject = new Data("Georg","Ded",33);
 
+        ListView listView = findViewById(R.id.zone_list);
 
-        map = new HashMap<>();
-        map.put(Name,firstObject.getName());
-        map.put(Description,firstObject.getDescription());
-        arrayList.add(map);
+        fillImages();
 
-        map = new HashMap<>();
-        map.put(Name,secondObject.getName());
-        map.put(Description,secondObject.getDescription());
-        arrayList.add(map);
-
-        final SimpleAdapter adapter = new SimpleAdapter(this ,arrayList , R.layout.item_list_view ,
-                new String[]{Name,Description},
-                new int[]{R.id.Name,R.id.Description});
+        generateRandomItemData();
+        adapter = new DataAdapter(this, null);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showItemData(position);
+            }
+        });
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                adapter.removeItem(position);
+                return true;
+            }
+        });
+    }
+
+    private void fillImages() {
+        images.add(ContextCompat.getDrawable(MainActivity.this,
+                android.R.drawable.ic_menu_report_image));
+        images.add(ContextCompat.getDrawable(MainActivity.this,
+                android.R.drawable.ic_menu_add));
+        images.add(ContextCompat.getDrawable(MainActivity.this,
+                android.R.drawable.ic_menu_agenda));
+        images.add(ContextCompat.getDrawable(MainActivity.this,
+                android.R.drawable.ic_menu_camera));
+        images.add(ContextCompat.getDrawable(MainActivity.this,
+                android.R.drawable.ic_menu_call));
+    }
+    private void generateRandomItemData() {
+        adapter.addItem(new Data(
+                images.get(random.nextInt(images.size())),
+                "Hello" + adapter.getCount(),
+                "It\'s me",
+                random.nextBoolean()));
+    }
+    private void showItemData(int position) {
+        Data itemData = adapter.getItem(position);
+        Toast.makeText(MainActivity.this,
+                "Title: " + itemData.getTitle() + "\n" +
+                        "Subtitle: " + itemData.getSubtitle() + "\n" +
+                        "Checked: " + itemData.isChecked(),
+                Toast.LENGTH_SHORT).show();
     }
 }
