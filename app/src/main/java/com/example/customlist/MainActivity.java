@@ -29,9 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
         fillImages();
 
-        generateRandomItemData();
+
         adapter = new DataAdapter(this, null);
         listView.setAdapter(adapter);
+        generateRandomItemData();
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
