@@ -19,20 +19,22 @@ public class MainActivity extends AppCompatActivity {
     private Random random = new Random();
     private DataAdapter adapter;
     private List<Drawable> images = new ArrayList<>();
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView listView = findViewById(R.id.zone_list);
+        listView = findViewById(R.id.zone_list);
 
         fillImages();
 
 
         adapter = new DataAdapter(this, null);
-        listView.setAdapter(adapter);
         generateRandomItemData();
+        listView.setAdapter(adapter);
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -64,15 +66,15 @@ public class MainActivity extends AppCompatActivity {
         adapter.addItem(new Data(
                 images.get(random.nextInt(images.size())),
                 "Hello" + adapter.getCount(),
-                "It\'s me",
+                "It\'s me"+
                 random.nextBoolean()));
     }
     private void showItemData(int position) {
         Data itemData = adapter.getItem(position);
         Toast.makeText(MainActivity.this,
                 "Title: " + itemData.getTitle() + "\n" +
-                        "Subtitle: " + itemData.getSubtitle() + "\n" +
-                        "Checked: " + itemData.isChecked(),
+                        "Subtitle: " + itemData.getSubtitle() + "\n"
+                      ,
                 Toast.LENGTH_SHORT).show();
     }
 }

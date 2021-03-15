@@ -17,13 +17,11 @@ import java.util.List;
 public class DataAdapter extends BaseAdapter {
     private List<Data> items;
     private LayoutInflater inflater;
-    private CompoundButton.OnCheckedChangeListener myCheckChangeList
-            = new CompoundButton.OnCheckedChangeListener() {
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            items.get((Integer) buttonView.getTag()).setChecked(isChecked);
-        }
-    };
 
+    @Override
+    public int getCount() {
+        return items.size();
+    }
     DataAdapter(Context context, List<Data> items) {
         if (items == null) {
             this.items = new ArrayList<>();
@@ -43,10 +41,7 @@ public class DataAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    @Override
-    public int getCount() {
-        return items.size();
-    }
+
 
     @Override
     public Data getItem(int position) {
@@ -71,17 +66,12 @@ public class DataAdapter extends BaseAdapter {
 
         Data itemData = items.get(position);
 
-        ImageView image = view.findViewById(R.id.imageView);
-        TextView title = view.findViewById(R.id.Name);
-        TextView subtitle = view.findViewById(R.id.Description);
-        CheckBox checkBox = view.findViewById(R.id.checkBox);
+        ImageView image = view.findViewById(R.id.image_view);
+        TextView title = view.findViewById(R.id.name);
+        TextView subtitle = view.findViewById(R.id.description);
         image.setImageDrawable(itemData.getImage());
         title.setText(itemData.getTitle());
         subtitle.setText(itemData.getSubtitle());
-        checkBox.setOnCheckedChangeListener(myCheckChangeList);
-        checkBox.setTag(position);
-        checkBox.setChecked(itemData.isChecked());
-
         return view;
     }
 }
